@@ -26,7 +26,7 @@ YTrain = num2cell(YTrain);
 
 %convolution function
 filter = hFilter;
-image = inpM(:,:,:,1);
+image = inpM(:,:,:,42);
 C = zeros(50, 50); %needs to change according to image, filter, and stride size
 [rowsI, colsI] = size(image);
 [rowsF, colsF] = size(filter);
@@ -66,5 +66,28 @@ for row = 1:2:49
     i = i + 1;
 end
 
+% flatten maxLayer
+F = reshape(maxLayer(:,:,1), [], 1);
+% initialize weights. Last elements on both rows are biases
+% for consistent random num generation
+rng(1);
+% create a 3*626 matrix of random ints between -5:5
+W = randi([-5 5], 3, 626);
+% add bias to F
+F = [F;1];
 
-        
+% calc v1, v2, v3
+% not sure if the transpose is needed/correct
+mul = F' .* W(1,:); 
+v1 = sum(mul, 'all');
+mul = F' .* W(2,:);
+v2 = sum(mul, 'all');
+mul = F' .* W(3,:);
+v3 = sum(mul, 'all');
+
+% use softmax function
+y1 = exp(v1)/(exp(v1)+exp(v2)+exp(v3));
+y2 = exp(v2)/(exp(v1)+exp(v2)+exp(v3));
+y3 = exp(v3)/(exp(v1)+exp(v2)+exp(v3));
+
+% always gives y2 with 1 prob, others very very low
