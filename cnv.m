@@ -2,8 +2,8 @@ function [convolved] = cnv(image,filter)
 
     padding = 0;
     strideConv = 1;
-    [rowsI,colsI] = size(image);
-    [rowsF,colsI] = size(filter);
+    [rowsI,~] = size(image);
+    [rowsF,~] = size(filter);
 
     convolvedSize = ((rowsI+2*padding-rowsF)/strideConv)+1;
     C = zeros(convolvedSize, convolvedSize); 

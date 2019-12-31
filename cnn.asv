@@ -1,91 +1,64 @@
+clc 
 clear all
-clc
 
 load('DesiredValuesVactor.mat');
 load('images.mat');
-% 
- img = inpM(:,:,:,5); %horizontal rectangle 
-% img2 = inpM(:,:,35); %vertical rectangle
-% img3 = inpM(:,:,55); %circle
-% 
-imshow(img)
 
-
-%%%%%%%%%Specify Training and Validation Sets,
-
+% Split Data
 XTrain = inpM(:,:,:,1:41);
-% inpTrain = num2cell(inpTrain);
 XTest = inpM(:,:,:,41:60);
-
-%XTest = num2cell(XTest);
-
 YTrain = desV(1:41);
-%desTrain = desTrain.';
 YTest = desV(41:60);
-
-
-
 YTrain = num2cell(YTrain);
-%C = categories(YTrain)
-%%%%%%%%%Define Network Architecture
 
-% layers = [
-%     imageInputLayer([51 51 1])
-%     
-%     convolution3dLayer(5,16,'Stride',4)
-%     
-%     maxPooling3dLayer(2,'Stride',2)
-%     
-%     flattenLayer('Name','flatten1')
-%    
-%     fullyConnectedLayer(10,'Name','fc1')
-%     
-%     softmaxLayer
-%         
-%      classificationLayer
-%  ];
+%----------------------------------------------------
 
-layers = [
-    imageInputLayer([51 51 1])
-    
-    convolution2dLayer(3,8,'Padding','same')
-    batchNormalizationLayer
-    reluLayer
-    
-    maxPooling2dLayer(2,'Stride',2)
-    
-    convolution2dLayer(3,16,'Padding','same')
-    batchNormalizationLayer
-    reluLayer
-    
-    maxPooling2dLayer(2,'Stride',2)
-    
-    convolution2dLayer(3,32,'Padding','same')
-    batchNormalizationLayer
-    reluLayer
-    
-    fullyConnectedLayer(10)
-    softmaxLayer
-    classificationLayer];
+%convolution function
+filter = filterProducer(2);
+image = inpM(:,:,:,42);
+[rowsI, colsI] = size(image);
+[rowsF, colsF] = size(filter);
+
+% Convolution
+C = cnv(image,filter);
+% MaxPooling
+maxLayer = maxPool(C,2);
+% flatten maxLayer
+F = reshape(maxLayer(:,:,1), [], 1);
+[row,col]
+% initialize weights. Last elements on both rows are biases
+% for consistent random num generation
+initialize()
 
 
-%%%%%%%%%Specify Training Options
-options = trainingOptions('sgdm', ...
-    'InitialLearnRate',0.001, ...
-    'MaxEpochs',4, ...
-    'Verbose',false, ...
-    'Plots','training-progress');
- 
-%  options = trainingOptions('sgdm', ...
-%    'InitialLearnRate',0.01, ...
-%    'MaxEpochs',4, ...
-%    'Shuffle','every-epoch', ...
-%    'ValidationData',{XTest,YTest}, ...
-%    'ValidationFrequency',30, ...
-%    'Verbose',false, ...
-%    'Plots','training-progress');
+rng(1);
+% create a 3*626 matrix of random ints between -5:5
+W = randi([-5 5], 3, 626);
+% add bias to F
+F = [F;1];
 
 
-%%%%%%%%%%%Train Network Using Training Data
 
- net = trainNetwork(XTrain,YTrain,layers,options);
+% calc v1, v2, v3
+% not sure if the transpose is needed/correct
+mul = F' .* W(1,:); 
+v1 = sum(mul, 'all');
+mul = F' .* W(2,:);
+v2 = sum(mul, 'all');
+mul = F' .* W(3,:);
+v3 = sum(mul, 'all');
+
+% use softmax function
+y1 = exp(v1)/(exp(v1)+exp(v2)+exp(v3));
+y2 = exp(v2)/(exp(v1)+exp(v2)+exp(v3));
+y3 = exp(v3)/(exp(v1)+exp(v2)+exp(v3));
+
+% always gives y2 with 1 prob, others very very low
+
+
+
+function r = filterProducer(size)
+        A = zeros(size,size);
+        A(:,:)= randi(100,size)/100;
+        r = A;
+      end

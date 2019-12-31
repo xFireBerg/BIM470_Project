@@ -25,22 +25,32 @@ C = cnv(image,filter);
 maxLayer = maxPool(C,2);
 % flatten maxLayer
 F = reshape(maxLayer(:,:,1), [], 1);
+[inputLayer,~] = size(F);
 % initialize weights. Last elements on both rows are biases
-% for consistent random num generation
-rng(1);
-% create a 3*626 matrix of random ints between -5:5
-W = randi([-5 5], 3, 626);
+% 
+[W1,W2,bias] = initialize(inputLayer,10,3);
 % add bias to F
 F = [F;1];
 
+Vhidden = F' * W1';
+Vhidden(11) = 1;
+% Maybe transfer Function here after Vhidden
+
+Vout = Vhidden * W2';
+
+% WHAT ÝS THE PROBLEM HERE ?????????????????????????
+y4 = exp(Vout(1))/(exp(Vout(1))+exp(Vout(2))+exp(Vout(3)));
+y5 = exp(Vout(2))/(exp(Vout(1))+exp(Vout(2))+exp(Vout(3)));
+y6 = exp(Vout(3))/(exp(Vout(1))+exp(Vout(2))+exp(Vout(3)));
+
 % calc v1, v2, v3
 % not sure if the transpose is needed/correct
-mul = F' .* W(1,:); 
-v1 = sum(mul, 'all');
-mul = F' .* W(2,:);
-v2 = sum(mul, 'all');
-mul = F' .* W(3,:);
-v3 = sum(mul, 'all');
+mul1 = F' .* W1(1,:); 
+v1 = sum(mul1, 'all');
+mul2 = F' .* W1(2,:);
+v2 = sum(mul2, 'all');
+mul3 = F' .* W1(3,:);
+v3 = sum(mul3, 'all');
 
 % use softmax function
 y1 = exp(v1)/(exp(v1)+exp(v2)+exp(v3));
