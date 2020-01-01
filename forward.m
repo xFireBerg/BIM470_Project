@@ -33,7 +33,7 @@ y3 = exp(Vout(3))/(exp(Vout(1))+exp(Vout(2))+exp(Vout(3)));
 
 % This is just for seeing the result
 % we should use localGradientOut in an appropriate place
-[Souts,Shidden] = localGradientOut(1,y1,y2,y3,Vout(1),Vout(2),Vout(3),W2);
+[Sinput,Shidden,Souts] = localGradientOut(1,y1,y2,y3,Vout(1),Vout(2),Vout(3),W1,W2)
 %Vhidden = Vhidden(1:10);
 
 [WW1,WW2] = updateWeight(W1,W2,Shidden,Souts,F,Vhidden,0.1);

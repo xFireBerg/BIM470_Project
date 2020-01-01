@@ -1,4 +1,4 @@
-function [Souts, Shidden] = localGradientOut(correctClass,y1,y2,y3,v1,v2,v3,W2)
+function [Sinput ,Shidden, Souts] = localGradientOut(correctClass,y1,y2,y3,v1,v2,v3,W1,W2)
 
 S = (exp(v1)+exp(v2)+exp(v3));
 
@@ -21,7 +21,8 @@ end
 Souts = [Sout1 Sout2 Sout3];
 W2 = W2(:,1:10);
 Shidden = W2' * Souts';
-
+% apply same formula for the input layer 
+Sinput = W1' * Shidden;
 
 
 end
