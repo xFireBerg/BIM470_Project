@@ -14,31 +14,34 @@ YTrain = num2cell(YTrain);
 %----------------------------------------------------
 
 %convolution function
-filter = filterProducer(2);
-image = inpM(:,:,:,42);
+filter = filterProducer(2, 5);
+image = inpM(:,:,:,2);
 [rowsI, colsI] = size(image);
 [rowsF, colsF] = size(filter);
 
 % Convolution
 C = cnv(image,filter);
 % MaxPooling
-maxLayer = maxPool(C,2);
-% flatten maxLayer
+maxLayer = maxPool(C,size(filter));
+% flatten maxLayer <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+% needs fixing to account for the
+% maxLayer having multilayers now
 F = reshape(maxLayer(:,:,1), [], 1);
 [inputLayer,~] = size(F);
 % initialize weights. Last elements on both rows are biases
 % 
-[W1,W2,bias] = initialize(inputLayer,10,3);
+[W1,W2,bias] = initialize(inputLayer,3,3);
 % add bias to F
 F = [F;1];
 
 Vhidden = F' * W1';
+Vout = Vhidden;
 Vhidden(11) = 1;
 % Maybe transfer Function here after Vhidden
 
-Vout = Vhidden * W2';
+%Vout = Vhidden * W2';
 
-% WHAT ÝS THE PROBLEM HERE ?????????????????????????
+% WHAT ?S THE PROBLEM HERE ?????????????????????????
 y4 = exp(Vout(1))/(exp(Vout(1))+exp(Vout(2))+exp(Vout(3)));
 y5 = exp(Vout(2))/(exp(Vout(1))+exp(Vout(2))+exp(Vout(3)));
 y6 = exp(Vout(3))/(exp(Vout(1))+exp(Vout(2))+exp(Vout(3)));
@@ -61,8 +64,10 @@ y3 = exp(v3)/(exp(v1)+exp(v2)+exp(v3));
 
 
 
-function r = filterProducer(size)
-        A = zeros(size,size);
-        A(:,:)= randi(100,size)/100;
+function r = filterProducer(size,number)
+        A = zeros(size,size,number);
+        for i = 1:number
+            A(:,:,i)= randi(100,size)/100;
+        end
         r = A;
-      end
+end
