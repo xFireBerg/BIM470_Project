@@ -14,8 +14,8 @@ maxLayer = maxPool(C,size(filter));
 % maxLayer = maxPool(C,size(filter))
 
 %3- Flatting with multi layer
-F = flat(maxLayer);
-F = [F;1];% add bias to F
+f = flat(maxLayer);
+F = [f;1];% add bias to F
 
 %4- Calculate the V
 Vhidden = F' * W1';
@@ -33,7 +33,12 @@ y3 = exp(Vout(3))/(exp(Vout(1))+exp(Vout(2))+exp(Vout(3)));
 
 % This is just for seeing the result
 % we should use localGradientOut in an appropriate place
-[s1,s2,s3,sh] = localGradientOut(1,y1,y2,y3,Vout(1),Vout(2),Vout(3),W2);
+[Souts,Shidden] = localGradientOut(1,y1,y2,y3,Vout(1),Vout(2),Vout(3),W2);
+%Vhidden = Vhidden(1:10);
+
+[WW1,WW2] = updateWeight(W1,W2,Shidden,Souts,F,Vhidden,0.1);
+
+
 
 
 end

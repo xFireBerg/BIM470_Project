@@ -15,7 +15,7 @@ YTrain = num2cell(YTrain);
 
 
 image = inpM(:,:,:,2);
-desired = 1 % for y1
+
 % initialize -- we need to give the flatten matrix size as an input
 [W1,W2,bias] = initialize(3125,10,3);
 % Forward 
