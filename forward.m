@@ -10,8 +10,8 @@ filter = filterProducer(2, 5);
 C = cnv(image,filter);
 C = ReLU(C);
 maxLayer = maxPool(C,size(filter));
-C = cnv(maxLayer,filter);
-maxLayer = maxPool(C,size(filter))
+% C = cnv(maxLayer,filter);
+% maxLayer = maxPool(C,size(filter))
 
 %3- Flatting with multi layer
 F = flat(maxLayer);
@@ -30,6 +30,11 @@ Vout = Vhidden * W2';
 y1 = exp(Vout(1))/(exp(Vout(1))+exp(Vout(2))+exp(Vout(3)));
 y2 = exp(Vout(2))/(exp(Vout(1))+exp(Vout(2))+exp(Vout(3)));
 y3 = exp(Vout(3))/(exp(Vout(1))+exp(Vout(2))+exp(Vout(3)));
+
+% This is just for seeing the result
+% we should use localGradientOut in an appropriate place
+[s1,s2,s3,sh] = localGradientOut(1,y1,y2,y3,Vout(1),Vout(2),Vout(3),W2);
+
 
 end
 
