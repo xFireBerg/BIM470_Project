@@ -1,6 +1,13 @@
-function [Sinput ,Shidden, Souts] = localGradientOut(correctClass,y1,y2,y3,v1,v2,v3,W1,W2)
+function [Sinput ,Shidden, Souts] = localGradientOut(correctClass,Yout,Vout,W1,W2)
 
+v1=Vout(1);
+v2=Vout(2);
+v3=Vout(3);
+y1=Yout(1);
+y2=Yout(2);
+y3=Yout(3);
 S = (exp(v1)+exp(v2)+exp(v3));
+
 
 if correctClass == 1
 Sout1 = -(((-1)/y1)*((exp(v1)*(S-exp(v1))) / S^2));
