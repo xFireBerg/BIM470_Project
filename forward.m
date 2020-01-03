@@ -36,4 +36,3 @@ Yout = [y1 y2 y3];
 
 end
 
-% always gives y2 with 1 prob, others very very low

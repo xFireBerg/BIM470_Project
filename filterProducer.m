@@ -1,5 +1,6 @@
 function r = filterProducer(size,number)
         A = zeros(size,size,number);
+        rng(1);
         for i = 1:number
             A(:,:,i)= randi([-100 100],size)/1000;
         end
