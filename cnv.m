@@ -7,7 +7,7 @@ function [convolved] = cnv(image,filter)
 
     convolvedSize = ((rowsI+2*padding-rowsF)/strideConv)+1;
     C = zeros(convolvedSize, convolvedSize, layersF); 
-    index = convolvedSize-(rowsF-1);
+    index = rowsI-(rowsF)+1;
 
     for layer = 1:layersF
 %         filter = filter(:,:,layer);

@@ -1,7 +1,4 @@
-function [Yout,Vhidden,Vout,maxLayer,F,filter,C] = forward(W1,W2,bias,input,filter)
-
-image = input;
-
+function [Yout,Vout,maxLayer,F,filter,C] = forward(W,bias,image,filter)
 
 
 
@@ -17,13 +14,17 @@ f = flat(maxLayer);
 F = [f;bias];% add bias to F
 
 %4- Calculate the V
-Vhidden = F' * W1';
-% Apply transfer function sigmoid
-Vhidden = sigmoidFunction(Vhidden);
-% Add bias
-Vhidden(11) = bias;
+Vout = F' * W';
+%Vout = sigmoidFunction(Vout);
+Vout = Vout/100;
 
-Vout = Vhidden * W2';
+% Vhidden = F' * W1';
+% % Apply transfer function sigmoid
+% Vhidden = sigmoidFunction(Vhidden);
+% % Add bias
+% Vhidden(11) = bias;
+% 
+% Vout = Vhidden * W2';
 
 
 y1 = exp(Vout(1))/(exp(Vout(1))+exp(Vout(2))+exp(Vout(3)));

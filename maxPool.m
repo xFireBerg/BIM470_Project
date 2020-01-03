@@ -10,7 +10,7 @@ function [pooled] = maxPool(C,filterDimensions)
     % operations for maxpooling C layer using window size 2*2 and stride 2
     % 3rd dimension is double the layers of filters, because after every
     % layer, the second layer stores the indexes, used for backpropagation
-    maxLayer = zeros(pooledSize, pooledSize, stridePool*layers); % maxpool layer
+    maxLayer = zeros(pooledSize, pooledSize, 2*layers); % maxpool layer
     index = (pooledSize*filterSize)-(filterSize-1);
     for layer = 1:2:layers*2  
         i = 1;

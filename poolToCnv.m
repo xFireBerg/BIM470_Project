@@ -25,7 +25,7 @@ function [convBack] = poolToCnv(CC,max_backprop,filterDimensions)
                  
                 window = C(row:row+(filterSize-1), col:col+(filterSize-1),cnvLayer);
                 window(indx) = value;
-                C(row:row+1,col:col+1,cnvLayer) = window;
+                C(row:row+(filterSize-1),col:col+(filterSize-1),cnvLayer) = window;
                 j = j + 1; 
             end
             i = i + 1;
