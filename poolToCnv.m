@@ -1,7 +1,10 @@
 function [convBack] = poolToCnv(CC,max_backprop,filterDimensions)
 
+    % This function is for backprop 
+    % Maxpooling layet --> Convolved
+    %
+
     % ASSUME THAT POOLING STRIDE IS EQUAL TO FILTER SIZE
-    %CC(row:row+1,col:col+1)(indx)=value;
     stridePool = filterDimensions(1);
     filterSize = filterDimensions(2); %always same as stridePool
     layers = filterDimensions(3);
@@ -34,6 +37,8 @@ function [convBack] = poolToCnv(CC,max_backprop,filterDimensions)
         
     end
     
+    % When we are doing forward, we are using ReLU after convolution
+    % So, apply ReLU for backprob to.
     C = ReLU(C);
     convBack=C;
     

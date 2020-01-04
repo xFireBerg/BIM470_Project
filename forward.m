@@ -1,36 +1,30 @@
 function [Yout,Vout,maxLayer,F,filter,C] = forward(W,bias,image,filter)
 
+% This function doin forward operation.
 
-
-%2- Convolution and maxpooling operations.
+% Convolution and maxpooling operations.
 C = cnv(image,filter);
 C = ReLU(C);
 maxLayer = maxPool(C,size(filter));
-% C = cnv(maxLayer,filter);
-% maxLayer = maxPool(C,size(filter))
 
-%3- Flatting with multi layer
+
+% Flatting with multi layer
 f = flat(maxLayer);
-F = [f;bias];% add bias to F
+% Add bias to F
+F = [f;bias];
 
-%4- Calculate the V
+% Calculate the Vout
 Vout = F' * W';
+% Transfer Function
 %Vout = sigmoidFunction(Vout);
-Vout = Vout/100;
+Vout = Vout/1000;
 
-% Vhidden = F' * W1';
-% % Apply transfer function sigmoid
-% Vhidden = sigmoidFunction(Vhidden);
-% % Add bias
-% Vhidden(11) = bias;
-% 
-% Vout = Vhidden * W2';
-
-
+% Softmax 
 y1 = exp(Vout(1))/(exp(Vout(1))+exp(Vout(2))+exp(Vout(3)));
 y2 = exp(Vout(2))/(exp(Vout(1))+exp(Vout(2))+exp(Vout(3)));
 y3 = exp(Vout(3))/(exp(Vout(1))+exp(Vout(2))+exp(Vout(3)));
 
+% Return outputs
 Yout = [y1 y2 y3];
 
 
