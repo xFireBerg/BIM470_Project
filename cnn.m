@@ -3,6 +3,7 @@ clear all
 
 load('DesiredValuesVactor.mat');
 load('images.mat');
+load('test_images.mat');
 
 % Suffled List for training
 list = zeros(60,1);
@@ -12,24 +13,24 @@ end
 list=list(randperm(length(list)));
 
 
-XTrain = zeros(51,51,1,40);
-XTest = zeros(51,51,1,20);
+XTrain = zeros(51,51,40);
+XValidation = zeros(51,51,20);
 YTrain = zeros(40,1);
-YTest = zeros(20,1);
+YValidation = zeros(20,1);
 
 
 % Split data to Train and Test - randomly
 for i = 1:60
     if i<=40
         random = list(i);
-        XTrain(:,:,:,i) = inpM(:,:,:,random);
+        XTrain(:,:,i) = inpM(:,:,random);
         YTrain(i) = desV(random);
         
     else
         random = list(i);
         i = i-40;
-        XTest(:,:,:,i) = inpM(:,:,:,random);
-        YTest(i) = desV(random);
+        XValidation(:,:,i) = inpM(:,:,random);
+        YValidation(i) = desV(random);
         
     end
     
@@ -39,6 +40,7 @@ end
 
 % Parameters
 % We are getting best result with these parameters (acc = 0.75)
+% Accuracy can change for each train.
 learningRate = 0.0008;
 epochNum = 15;
 filterNum = 5;
@@ -51,10 +53,10 @@ filter = filterProducer(2, filterNum);
 %------------------------------- Train -------------------------------
 
 for j = 1:epochNum
-    %[XTrain,YTrain,XTest,YTest,list] = suffle(XTrain,YTrain,XTest,YTest,inpM,desV);
+    %[XTrain,YTrain,XValidation,YValidation,list] = suffle(XTrain,YTrain,XValidation,YValidation,inpM,desV);
     
     for i = 1:40
-        image = XTrain(:,:,:,i);
+        image = XTrain(:,:,i);
         class = YTrain(i,1);
 
 
@@ -74,21 +76,27 @@ for j = 1:epochNum
         filter = updatedFilter;
         W = WW;
     end
+    
     % Print the accuracy for the epoch   
-    [acc, correct, wrong] = test(XTest,YTest,W,filter);
-    X = ['----- Epcoch -  ',num2str(j),'    Acc -  ',num2str(acc),' Correct : ',num2str(correct),' Wrong : ',num2str(wrong)];
+    [acc, correct, wrong] = testAcc(XValidation,YValidation,W,filter);
+    X = ['----- Epcoch -  [',num2str(epochNum),':',num2str(j),']    Acc -  ',num2str(acc),' Correct : ',num2str(correct),' Wrong : ',num2str(wrong)];
     disp(X)
 end
 
 % ------------------------------- Test -------------------------------
-[acc, correct, wrong] = test(XTest,YTest,W,filter);
-disp("")
-disp(" -------------------- TEST -------------------- ")
+[acc, correct, wrong] = testAcc(XValidation,YValidation,W,filter);
+disp(".")
+disp(".")
+disp(" -------------------- Validation -------------------- ")
 X = [' Acc -  ',num2str(acc),' Correct : ',num2str(correct),' Wrong : ',num2str(wrong)];
 disp(X)
+disp(".")
+disp(".")
+disp(" -------------------- TEST -------------------- ")
+predicted = predict(test,W,filter);
 
 % To suffle data ( We are not using this function now) 
-function [XTrain,YTrain,XTest,YTest,list] = suffle(XTrain,YTrain,XTest,YTest,inpM,desV)
+function [XTrain,YTrain,XValidation,YValidation,list] = suffle(XTrain,YTrain,XValidation,YValidation,inpM,desV)
     
     list = zeros(60,1);
     for a = 1:60
@@ -98,14 +106,14 @@ function [XTrain,YTrain,XTest,YTest,list] = suffle(XTrain,YTrain,XTest,YTest,inp
     for i = 1:60
         if i<=40
             random = list(i);
-            XTrain(:,:,:,i) = inpM(:,:,:,random);
+            XTrain(:,:,i) = inpM(:,:,random);
             YTrain(i) = desV(random);
 
         else
             random = list(i);
             i = i-40;
-            XTest(:,:,:,i) = inpM(:,:,:,random);
-            YTest(i) = desV(random);
+            XValidation(:,:,i) = inpM(:,:,random);
+            YValidation(i) = desV(random);
 
         end
 
@@ -113,7 +121,6 @@ function [XTrain,YTrain,XTest,YTest,list] = suffle(XTrain,YTrain,XTest,YTest,inp
     end
 
 end
-
 
 
 

@@ -32,7 +32,9 @@ Sout2 = -(((-1)/y3)*(-(exp(v1)*exp(v2)*exp(v3)) / S^2));
 Sout3 = -(((-1)/y3)*((exp(v3)*(S-exp(v3))) / S^2));
 end
 
+
 Souts = [Sout1 Sout2 Sout3];
+Souts = round(Souts,5);
 
 % Calculate the Sinput-Flaten
 [row,col] = size(W);
