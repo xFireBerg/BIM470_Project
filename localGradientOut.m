@@ -18,23 +18,23 @@ S = (exp(v1)+exp(v2)+exp(v3));
 % Find the local gradient by applying formula 
 if correctClass == 1
 Sout1 = -(((-1)/y1)*((exp(v1)*(S-exp(v1))) / S^2));
-Sout2 = -(((-1)/y1)*(-(exp(v1)*exp(v2)*exp(v3)) / S^2));
-Sout3 = -(((-1)/y1)*(-(exp(v1)*exp(v2)*exp(v3)) / S^2));
+Sout2 = -(((-1)/y1)*(-(exp(v1)*exp(v2)) / S^2));
+Sout3 = -(((-1)/y1)*(-(exp(v1)*exp(v3)) / S^2));
 end
 if correctClass == 2
-Sout1 = -(((-1)/y2)*(-(exp(v1)*exp(v2)*exp(v3)) / S^2));
+Sout1 = -(((-1)/y2)*(-(exp(v2)*exp(v1)) / S^2));
 Sout2 = -(((-1)/y2)*((exp(v2)*(S-exp(v2))) / S^2));
-Sout3 = -(((-1)/y2)*(-(exp(v1)*exp(v2)*exp(v3)) / S^2));
+Sout3 = -(((-1)/y2)*(-(exp(v2)*exp(v3)) / S^2));
 end
 if correctClass == 3
-Sout1 = -(((-1)/y3)*(-(exp(v1)*exp(v2)*exp(v3))/ S^2));
-Sout2 = -(((-1)/y3)*(-(exp(v1)*exp(v2)*exp(v3)) / S^2));
+Sout1 = -(((-1)/y3)*(-(exp(v3)*exp(v1))/ S^2));
+Sout2 = -(((-1)/y3)*(-(exp(v3)*exp(v2)) / S^2));
 Sout3 = -(((-1)/y3)*((exp(v3)*(S-exp(v3))) / S^2));
 end
 
 
 Souts = [Sout1 Sout2 Sout3];
-Souts = round(Souts,5);
+%Souts = round(Souts,7);
 
 % Calculate the Sinput-Flaten
 [row,col] = size(W);
